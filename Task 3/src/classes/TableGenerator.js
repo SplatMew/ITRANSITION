@@ -7,8 +7,6 @@ class TableGenerator{
         const probCalculator = new ProbabilityCalculator();
         const probabilities = probCalculator.calculateProbabilities(dice);
 
-        console.log("\nNon-transitive Dice Game Help".bold);
-        console.log("============================\n");
         console.log("This game uses dice with special number configurations that create a non-transitive relationship.");
         console.log("This means Die A might usually beat Die B, Die B might usually beat Die C, but Die C might usually beat Die A.");
         console.log("The table below shows the probability of the row dice winning against the column dice.\n");
@@ -39,7 +37,7 @@ class TableGenerator{
             }
             table.push(row);
         }
-        return table.toString() + "\n\nHigher values shown in " + "green".green + "indicate favorable matchups.\n";
+        return table.toString() + "\n\nHigher values shown in " + "green".green + " indicate favorable matchups.\n";
     }
 }
 

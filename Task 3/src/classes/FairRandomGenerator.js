@@ -1,5 +1,6 @@
 const CryptoProvider = require('./CryptoProvider');
 const readlineSync = require('readline-sync');
+const crypto = require('crypto');
 
 class FairRandomGenerator {
     constructor(){
@@ -8,7 +9,7 @@ class FairRandomGenerator {
 
     generateFairNumber(min, max, displayCallback){
         const key = this.cryptoProvider.generateSecureKey();
-        const computerNumber = this.cryptoProvider.generateSecureRandomInt(min,max);
+        const computerNumber = crypto.randomInt(min, max + 1);          //I implemented, or rather: used the "out of the box" method from crypto to generate the randomInt here.
         const hmac = this.cryptoProvider.calculateHMAC(computerNumber,key);
 
         displayCallback(`I selected a random value in the range ${min} . . ${max} (HMAC=${hmac}).`);
@@ -52,7 +53,7 @@ class FairRandomGenerator {
 
     performRoll(dice,displayCallback){
         const key = this.cryptoProvider.generateSecureKey();
-        const computerNumber = this.cryptoProvider.generateSecureRandomInt(0, dice.faceCount - 1);
+        const computerNumber = crypto.randomInt(0, dice.faceCount - 1);
         const hmac = this.cryptoProvider.calculateHMAC(computerNumber, key);
 
         displayCallback(`I selected a random value in the range 0..${dice.faceCount - 1} (HMAC=${hmac}).`);
