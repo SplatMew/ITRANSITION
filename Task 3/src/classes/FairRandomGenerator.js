@@ -53,7 +53,7 @@ class FairRandomGenerator {
 
     performRoll(dice,displayCallback){
         const key = this.cryptoProvider.generateSecureKey();
-        const computerNumber = crypto.randomInt(0, dice.faceCount - 1);
+        const computerNumber = crypto.randomInt(0, dice.faceCount - 1); // And here.
         const hmac = this.cryptoProvider.calculateHMAC(computerNumber, key);
 
         displayCallback(`I selected a random value in the range 0..${dice.faceCount - 1} (HMAC=${hmac}).`);
