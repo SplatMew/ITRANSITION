@@ -12,11 +12,7 @@ class CryptoProvider {
   }
   
   generateSecureRandomInt(min, max) {
-    // Simple, efficient implementation using Node's crypto module
-    // Calculate range size and needed bytes
     const range = max - min + 1;
-    
-    // Use a single call to randomInt which handles uniform distribution internally
     return crypto.randomInt(min, max + 1);
   }
 }
