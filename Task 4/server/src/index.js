@@ -30,16 +30,102 @@ async function authMiddleWare(req, res, next){
 
 //Registration endpoint.
 
+app.post('/api/register', async (req, res)=>{
+    const {name, email, password} = req.body;
+    
+    if(!email || !password || !name)
+        return res.status(400).json({error:"All fields are required."});
+
+    try{
+        const hash = await bcrypt.hash(password,10);
+        await pool.query(
+            "INSERT INTO accounts (name, email, password_hash) VALUES ($1, $2, $2)", 
+            [name, email.lowerCase(), hash]
+        );
+
+        res.json({success:true});
+    }catch(err){
+        if(err.code === '23505')
+            return res.status(400).json({error:"This e-mail already exists."});
+
+        res.status(500).json({error: "Server error."});
+    }
+});
+
 //Log in endpoint.
+
+app.post('/api/login', async (req, res) => {
+    const{email, password} = req.body;
+    const {rows} = await pool.query(
+        "SELECT user_id, password_hash, status FROM accounts WHERE email=$1",
+        [email.toLowerCase()]
+    );
+
+    if(!rows.length || rows[0].status === 'deleted')
+        return res.status(400).json({error:"Invalid credentials."});
+
+    if(rows[0].status === 'blocked')
+        return res.status(400).json({error:"This account is blocked."});
+
+    const valid = await bcrypt.compare(password, rows[0].password_hash);
+    
+    if(!valid)
+        return res.status(400).json({error:"Invalid credentials."});
+
+    await pool.query("UPDATE accounts SET last_login_at=now() WHERE user_id=$1",
+        [rows[0].user_id]
+    );
+
+    const token = jwt.sign({id:rows[0].user_id }, SECRET, {expiresIn: '12h'});
+    res.json({token});    
+});
+
+app.use('/api/users', authMiddleWare);
+
+
+//Get users list, sorted by las login
+app.get('/api/users', async(req, res) =>{
+    const {rows} = await pool.query(`
+        SELEC user_id, name, email, last_login_at, status
+        FROM accounts
+        ORDER BY last_login_at DESC NULLS LAST, created_at DESC
+        `);
+        res.json(rows);
+});
 
 //Block users endpoint
 
-//Get users list, sorted by las login
+app.post('/api/users/block', async(req, res) => {
+    await pool.query(
+        "UPDATE accounts SET status='blocked' WHERE user_id = ANY($1::int[0]) AND status != 'deleted'",
+        [req.body.ids]
+    );
+    res.json({success: true});
+})
 
 // Unblock users.
+app.post('/api/users/block', async(req, res) => {
+    await pool.query(
+        "UPDATE accounts SET status='active' WHERE user_id = ANY($1::int[0]) AND status != 'deleted'",
+        [req.body.ids]
+    );
+    res.json({success:true});
+});
 
 //Delete users.
+app.post('/api/users/delete', async(req, res) => {
+    await pool.query(
+        "UPDATE accounts SET status='deleted' WHERE user_id = ANY($1::int[])",
+        [req.body.ids]
+        );
+    res.json({success:true});
+});
 
 // testing ping.
+app.get('/api/ping', (req, res) => {
+    res.json({status:"ok"});
+});
 
-app.listen(PORT, ()=> {console.log("server on PORT", PORT)});
+app.listen(PORT, ()=> {
+    console.log("server on PORT", PORT);
+});

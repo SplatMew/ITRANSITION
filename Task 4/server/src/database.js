@@ -17,7 +17,7 @@ const createTablQry = `
         status VARCHAR(10) NOT NULL DEFAULT 'active',
         created_at TIMESTAMP NOT NULL DEFAULT now(),
         last_login_at TIMESTAMP
-    );`
+    );`;
 
 const createUniqueEmailIdx = `
     CREATE UNIQUE INDEX IF NOT EXISTS accounts_email_unique_idx ON accounts(email);
