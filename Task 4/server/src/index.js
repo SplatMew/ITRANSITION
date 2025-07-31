@@ -6,6 +6,8 @@ const  pool = require("./database.js");
 
 const PORT = 3000;
 
+const SECRET = "key12345"
+
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -21,7 +23,7 @@ async function authMiddleWare(req, res, next){
         return res.status(401).json({error: "Invalid or expired token."});
     }
 
-    const { rows } = await pool.query("SELECT user_id, status FROM accounts WHERE user_is=$1", [payload.id]);
+    const { rows } = await pool.query("SELECT user_id, status FROM accounts WHERE user_id=$1", [payload.id]);
     if(!rows.length || rows[0].status !== 'active')
         return res.status(403).json({error:'Account blocked or deleted.'});
     req.user = rows[0];
@@ -39,11 +41,12 @@ app.post('/api/register', async (req, res)=>{
     try{
         const hash = await bcrypt.hash(password,10);
         await pool.query(
-            "INSERT INTO accounts (name, email, password_hash) VALUES ($1, $2, $2)", 
-            [name, email.lowerCase(), hash]
+            "INSERT INTO accounts (name, email, password_hash) VALUES ($1, $2, $3)", 
+            [name, email.toLowerCase(), hash]
         );
 
         res.json({success:true});
+
     }catch(err){
         if(err.code === '23505')
             return res.status(400).json({error:"This e-mail already exists."});
@@ -76,7 +79,7 @@ app.post('/api/login', async (req, res) => {
         [rows[0].user_id]
     );
 
-    const token = jwt.sign({id:rows[0].user_id }, SECRET, {expiresIn: '12h'});
+    const token = jwt.sign({ id: rows[0].user_id }, SECRET, { expiresIn: '12h' });
     res.json({token});    
 });
 
