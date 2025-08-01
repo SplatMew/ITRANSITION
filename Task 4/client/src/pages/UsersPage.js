@@ -85,12 +85,11 @@ export default function UsersPage({token, logout}){
 
   return (
     <div className="container mt-4">
-      {/* Toolbar */}
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div>
           <Button variant="primary" className="me-2"
             onClick={() => handleAction('block')} disabled={!selected.length}>
-            <i className="bi bi-lock"></i> Block
+              Block
           </Button>
           <OverlayTrigger placement="top" overlay={<Tooltip>Unblock selected</Tooltip>}>
             <Button variant="outline-primary" className="me-2"
@@ -102,7 +101,6 @@ export default function UsersPage({token, logout}){
           <OverlayTrigger placement="top" overlay={<Tooltip>Delete selected</Tooltip>}>
             <Button variant="outline-danger"
               onClick={() => handleAction('delete')} disabled={!selected.length}>
-              
               Delete
             </Button>
           </OverlayTrigger>
@@ -114,6 +112,7 @@ export default function UsersPage({token, logout}){
       {/* Status/Error */}
       {error && <Alert variant="danger">{error}</Alert>}
       {status && <Alert variant="success">{status}</Alert>}
+      
       {/* Table */}
       <Table striped bordered hover responsive>
         <thead>

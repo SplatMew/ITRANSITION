@@ -107,7 +107,7 @@ app.post('/api/users/block', async(req, res) => {
 })
 
 // Unblock users.
-app.post('/api/users/block', async(req, res) => {
+app.post('/api/users/unblock', async(req, res) => {
     await pool.query(
         "UPDATE accounts SET status='active' WHERE user_id = ANY($1::int[0]) AND status != 'deleted'",
         [req.body.ids]
