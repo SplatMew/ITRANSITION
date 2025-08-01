@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const  pool = require("./database.js");
 
-const PORT = 3000;
+const PORT = 4000;
 
 const SECRET = "key12345"
 
@@ -89,7 +89,7 @@ app.use('/api/users', authMiddleWare);
 //Get users list, sorted by las login
 app.get('/api/users', async(req, res) =>{
     const {rows} = await pool.query(`
-        SELEC user_id, name, email, last_login_at, status
+        SELECT user_id, name, email, last_login_at, status
         FROM accounts
         ORDER BY last_login_at DESC NULLS LAST, created_at DESC
         `);
