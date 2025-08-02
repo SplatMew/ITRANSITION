@@ -4,15 +4,16 @@ import {Button, Table, Form,
         OverlayTrigger, Tooltip,
         Alert, Spinner, InputGroup, FormControl} from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-function timeAgo(dt){
-  if(!dt) return "";
-  
+
+function timeAgo(dt) {
+  if (!dt) return "never";
   const d = new Date(dt);
-  const diff = Math.floor((Date.now()-d.getTime()/1000));
-  if(diff<60) return "less than a minute ago";
-  if(diff<3600) return `${Math.floor(diff/60)} minutes ago.`;
-  if(diff<86400) return `${Math.floor(diff/3600)} hours ago.`;
-  return `${Math.floor(diff/86400)} days ago.`;
+  if (!(d instanceof Date) || isNaN(d)) return "never";
+  const diff = Math.floor((Date.now() - d.getTime()) / 1000);
+  if (diff < 60) return "less than a minute ago";
+  if (diff < 3600) return `${Math.floor(diff/60)} minutes ago`;
+  if (diff < 86400) return `${Math.floor(diff/3600)} hours ago`;
+  return `${Math.floor(diff/86400)} days ago`;
 }
 
 export default function UsersPage({token, logout}){
@@ -112,7 +113,7 @@ export default function UsersPage({token, logout}){
       {/* Status/Error */}
       {error && <Alert variant="danger">{error}</Alert>}
       {status && <Alert variant="success">{status}</Alert>}
-      
+
       {/* Table */}
       <Table striped bordered hover responsive>
         <thead>
