@@ -1,9 +1,10 @@
 import { HOST_PORT, SECRET_KEY} from './config.js';
-const express = require('express');
-const cors = require ('cors');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const  pool = require("./database.js");
+import express from 'express';
+import cors from 'cors';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import pool from './database.js';
+
 
 
 const PORT = HOST_PORT;

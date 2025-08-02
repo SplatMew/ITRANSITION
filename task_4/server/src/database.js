@@ -1,5 +1,8 @@
-const { Pool } = require("pg");
-import { DB_PASSWORD, DB_USER, DB_PORT } from "./config";
+
+import { DB_PASSWORD, DB_USER, DB_PORT } from "./config.js";
+import pkg from 'pg';
+
+const {Pool} = pkg;
 
 
 const pool = new Pool({
@@ -40,4 +43,4 @@ const createTimeIndex = `
         }
     })();*/
 
-module.exports = pool;
+export default pool;
