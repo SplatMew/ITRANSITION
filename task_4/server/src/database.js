@@ -1,19 +1,17 @@
 
-import { DB_PASSWORD, DB_USER, DB_PORT } from "./config.js";
+import { DB_URL} from "./config.js";
 import pkg from 'pg';
 
 const {Pool} = pkg;
 
 
 const pool = new Pool({
-    user: DB_USER,
-    password: DB_PASSWORD,
-    host: "localhost",
-    port: DB_PORT, 
-    database: "task_4",
+  connectionString: DB_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
-
-/*const createTablQry = `
+const createTablQry = `
     CREATE TABLE accounts(
         user_id SERIAL PRIMARY KEY,
         name VARCHAR ( 100 ) NOT NULL,
@@ -41,6 +39,6 @@ const createTimeIndex = `
         }catch(err){
             console.error(err);
         }
-    })();*/
+    })();
 
 export default pool;

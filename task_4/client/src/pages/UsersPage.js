@@ -34,7 +34,7 @@ export default function UsersPage({token, logout}){
     setLoading(true);
     setError('');
     try {
-      const {data} = await axios.get('http://localhost:4000/api/users', {
+      const {data} = await axios.get('https://itransition-jh91.onrender.com/api/users', {
         headers: {Authorization:`Bearer ${token}`}
       });
       setUsers(data);
@@ -59,7 +59,7 @@ export default function UsersPage({token, logout}){
     try {
       
       await axios.post(
-        `http://localhost:4000/api/users/${action}`,
+        `https://itransition-jh91.onrender.com/api/users/${action}`,
         {ids: selected},
         {headers:{Authorization:`Bearer ${token}`}}
       );

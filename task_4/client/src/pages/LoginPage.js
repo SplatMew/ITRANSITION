@@ -19,7 +19,7 @@ function LoginPage({onLogin}) {
 
     try{
       const response = await axios.post(
-        'http://localhost:4000/api/login',
+        'https://itransition-jh91.onrender.com/api/login',
         {email,password}
       );
       onLogin(response.data.token);

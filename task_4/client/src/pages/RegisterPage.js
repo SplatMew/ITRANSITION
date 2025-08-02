@@ -19,7 +19,7 @@ function RegisterPage() {
     setLoading(true);
     try {
       await axios.post(
-        'http://localhost:4000/api/register',
+        'https://itransition-jh91.onrender.com/api/register',
         { name, email, password }
       );
       setStatus('Account created! Redirecting to login...');
