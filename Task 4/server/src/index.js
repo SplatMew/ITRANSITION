@@ -1,12 +1,14 @@
+import { HOST_PORT, SECRET_KEY} from './config.js';
 const express = require('express');
 const cors = require ('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const  pool = require("./database.js");
 
-const PORT = 4000;
 
-const SECRET = "key12345"
+const PORT = HOST_PORT;
+
+const SECRET = SECRET_KEY;
 
 const app = express();
 app.use(express.json());
@@ -18,7 +20,7 @@ async function authMiddleWare(req, res, next){
     if(!token) return res.status(401).json({error: "Missing token."});
     let payload;
     try{
-        payload = jwt.verify(token, SECRET);
+        payload = jwt.verify(token, SECRET_KEY);
     }catch{
         return res.status(401).json({error: "Invalid or expired token."});
     }

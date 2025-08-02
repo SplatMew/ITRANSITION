@@ -1,10 +1,12 @@
 const { Pool } = require("pg");
+import { DB_PASSWORD, DB_USER, DB_PORT } from "./config";
+
 
 const pool = new Pool({
-    user: "postgres",
-    password: "AnTo0301!",
+    user: DB_USER,
+    password: DB_PASSWORD,
     host: "localhost",
-    port: 5432, 
+    port: DB_PORT, 
     database: "task_4",
 });
 
