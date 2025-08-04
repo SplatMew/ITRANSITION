@@ -12,7 +12,7 @@ const BookTable = ({ settings }) => {
   }, [settings]);
 
   const fetchBooks = async (newPage) => {
-    const response = await axios.get('http://localhost:4000/books', {
+    const response = await axios.get('https://faker-book-gen.onrender.com/books', {
       params: { seed: settings.seed, page: newPage, language: settings.language }
     });
     if (newPage === 0) {
